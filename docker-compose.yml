@@ -27,12 +27,24 @@ services:
       - POSTGRES_USER=fastapi_traefik
       - POSTGRES_PASSWORD=fastapi_traefik
       - POSTGRES_DB=fastapi_traefik
+  pgadmin:
+      image: dpage/pgadmin4:latest
+      environment:
+        - "PGADMIN_DEFAULT_EMAIL=test@test.com"
+        - "PGADMIN_DEFAULT_PASSWORD=test"
+      expose:
+        - 5050
+      depends_on:
+        - db
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.pgadmin.rule=Host(`pgadmin.localhost`)"
   traefik:
     image: traefik:latest
     ports:
+      - "5050:80"
       - "8008:80"
       - "8081:8080"
-      - "8082:5050"
     volumes:
       - "./traefik.dev.toml:/etc/traefik/traefik.toml"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"

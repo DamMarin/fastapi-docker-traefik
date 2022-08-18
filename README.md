@@ -18,6 +18,7 @@ Test it out:
 
 1. [http://fastapi.localhost:8008/](http://fastapi.localhost:8008/)
 1. [http://fastapi.localhost:8081/](http://fastapi.localhost:8081/)
+1. [http://pgadmin.localhost:5050/](http://pgadmin.localhost:5050/)
 
 ### Production
 
