@@ -1,6 +1,6 @@
 # docker-compose.prod.yml
 
-version: '3.8'
+version: '3.9'
 
 services:
   web:
@@ -19,7 +19,7 @@ services:
       - "traefik.http.routers.fastapi.tls=true"
       - "traefik.http.routers.fastapi.tls.certresolver=letsencrypt"
   db:
-    image: postgres:13-alpine
+    image: postgres:14.5-alpine
     volumes:
       - postgres_data_prod:/var/lib/postgresql/data/
     expose:
@@ -28,6 +28,20 @@ services:
       - POSTGRES_USER=fastapi_traefik_prod
       - POSTGRES_PASSWORD=fastapi_traefik_prod
       - POSTGRES_DB=fastapi_traefik_prod
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    environment:
+      - "PGADMIN_DEFAULT_EMAIL=test@test.com"
+      - "PGADMIN_DEFAULT_PASSWORD=test"
+    expose:
+      - 5050
+    depends_on:
+      - db
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pgadmin.rule=Host(`fastapi-pgadmin.your-domain.com`)"
+      - "traefik.http.routers.pgadmin.tls=true"
+      - "traefik.http.routers.pgadmin.tls.certresolver=letsencrypt"
   traefik:
     build:
       context: .
